@@ -1,6 +1,6 @@
 {
   "name": "kaiwa",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Chatbot test helper",
   "main": "lib/index.js",
   "scripts": {
