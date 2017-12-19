@@ -11,35 +11,33 @@ const kaiwaOptions = {
 const tester = new Kaiwa.Tester(kaiwaOptions)
 const server = new Hapi.Server()
 
-beforeAll(() => {
-  return new Promise((resolve, reject) => {
-    server.connection({ port: 3002 })
-    server.route({
-      method: 'POST',
-      path: '/',
-      handler: (request, reply) => {
-        Wreck.post('http://localhost:3001/bots/tester', { payload: { text: 'pong' } }, () => {
-          Wreck.post('http://localhost:3001/bots/tester', { payload: { text: 'pang' } }, () => { })
-        })
-        return reply({ status: 'OK' })
-      },
-    })
-    server.start((err) => {
-      if (err) {
-        return reject(err)
-      }
-      console.log(`Server running at ${server.info.uri}`)
-      // Start kaiwa server
-      tester.startListening((error) => {
-        if (error) {
-          return reject(error)
-        }
-        return resolve()
+beforeAll(() => new Promise((resolve, reject) => {
+  server.connection({ port: 3002 })
+  server.route({
+    method: 'POST',
+    path: '/',
+    handler: (request, reply) => {
+      Wreck.post('http://localhost:3001/bots/tester', { payload: { text: 'pong' } }, () => {
+        Wreck.post('http://localhost:3001/bots/tester', { payload: { text: 'pang' } }, () => { })
       })
+      return reply({ status: 'OK' })
+    },
+  })
+  server.start((err) => {
+    if (err) {
+      return reject(err)
+    }
+    console.log(`Server running at ${server.info.uri}`)
+    // Start kaiwa server
+    tester.startListening((error) => {
+      if (error) {
+        return reject(error)
+      }
       return resolve()
     })
+    return resolve()
   })
-})
+}))
 
 test('send request and validate the response', (done) => {
   const messageToSend = { text: 'ping' }
@@ -50,15 +48,19 @@ test('send request and validate the response', (done) => {
   })
 })
 
-afterAll(() => {
+afterAll(() => new Promise((resolve, reject) => {
   server.stop((serverError) => {
     if (serverError) {
-      console.error(serverError)
+      console.log(serverError)
+      return reject()
     }
     tester.stopListening((err) => {
       if (err) {
         console.log(err)
+        return reject()
       }
+      return resolve()
     })
+    return resolve()
   })
-})
+}))
