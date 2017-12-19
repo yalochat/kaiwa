@@ -4,21 +4,25 @@
   "description": "Chatbot test helper",
   "main": "lib/index.js",
   "scripts": {
-    "test": "lab -c -v -S"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^3.4.7",
+    "bluebird": "^3.5.1",
     "hapi": "^16.1.0",
     "lodash": "^4.17.4",
     "wreck": "^10.0.0"
   },
   "devDependencies": {
-    "code": "^4.0.0",
     "eslint": "^4.13.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
-    "lab": "^11.2.2"
+    "jest": "^21.2.1",
+    "sonarqube-scanner": "^2.0.2"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true
   }
 }
